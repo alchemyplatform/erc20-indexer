@@ -53,7 +53,7 @@ function App() {
             ERC-20 Token Indexer
           </Heading>
           <Text>
-            Plug in an address and this website will return all of its ERC-20
+            Plug in an address and this website will return all of it&#39;s ERC-20
             token balances!
           </Text>
         </Flex>
