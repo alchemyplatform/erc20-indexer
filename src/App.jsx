@@ -24,8 +24,13 @@ function App() {
 
 
     if (!userAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
-      alert('Please enter a valid ethereum address');
-      return;
+      try {
+        const ensName = providers.resolveName(userAddress);
+        setUserAddress(ensName);
+      } catch (error) {
+        alert('Please enter a valid ethereum address');
+        return;  
+      }
     }
 
     try {
