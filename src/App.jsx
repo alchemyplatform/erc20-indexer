@@ -18,8 +18,16 @@ function App() {
   const [hasQueried, setHasQueried] = useState(false);
   const [tokenDataObjects, setTokenDataObjects] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   async function getTokenBalance() {
+
+
+    if(!userAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
+      alert('Please enter a valid ethereum address');
+      return;
+    }
+
     const config = {
       apiKey: 'import.meta.env.ALCHEMY_API_KEY',
       network: Network.ETH_MAINNET,
