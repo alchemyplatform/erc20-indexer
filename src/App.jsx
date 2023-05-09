@@ -23,34 +23,41 @@ function App() {
   async function getTokenBalance() {
 
 
-    if(!userAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
+    if (!userAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
       alert('Please enter a valid ethereum address');
       return;
     }
 
-    const config = {
-      apiKey: 'import.meta.env.ALCHEMY_API_KEY',
-      network: Network.ETH_MAINNET,
-    };
+    try {
+      const config = {
+        apiKey: 'import.meta.env.ALCHEMY_API_KEY',
+        network: Network.ETH_MAINNET,
+      };
 
-    const alchemy = new Alchemy(config);
-    const data = await alchemy.core.getTokenBalances(userAddress);
+      const alchemy = new Alchemy(config);
+      const data = await alchemy.core.getTokenBalances(userAddress);
 
-    setResults(data);
-    setLoading(true);
+      setResults(data);
+      setLoading(true);
 
-    const tokenDataPromises = [];
+      const tokenDataPromises = [];
 
-    for (let i = 0; i < data.tokenBalances.length; i++) {
-      const tokenData = alchemy.core.getTokenMetadata(
-        data.tokenBalances[i].contractAddress
-      );
-      tokenDataPromises.push(tokenData);
+      for (let i = 0; i < data.tokenBalances.length; i++) {
+        const tokenData = alchemy.core.getTokenMetadata(
+          data.tokenBalances[i].contractAddress
+        );
+        tokenDataPromises.push(tokenData);
+      }
+
+      setTokenDataObjects(await Promise.all(tokenDataPromises));
+      setHasQueried(true);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setHasQueried(false);
+      setError('Something went wrong. Please, try again.');
+      console.error(error);
     }
-
-    setTokenDataObjects(await Promise.all(tokenDataPromises));
-    setHasQueried(true);
-    setLoading(false);
   }
   return (
     <Box w="100vw">
@@ -87,6 +94,11 @@ function App() {
           bgColor="white"
           fontSize={24}
         />
+        {error && (
+          <Text color="red" fontSize="sm">
+            {error}
+          </Text>
+        )}
         <Button fontSize={20} onClick={getTokenBalance} mt={36} bgColor="white">
           Check ERC-20 Token Balances
         </Button>
