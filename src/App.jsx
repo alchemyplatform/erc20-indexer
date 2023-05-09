@@ -17,6 +17,7 @@ function App() {
   const [results, setResults] = useState([]);
   const [hasQueried, setHasQueried] = useState(false);
   const [tokenDataObjects, setTokenDataObjects] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   async function getTokenBalance() {
     const config = {
@@ -28,6 +29,7 @@ function App() {
     const data = await alchemy.core.getTokenBalances(userAddress);
 
     setResults(data);
+    setLoading(true);
 
     const tokenDataPromises = [];
 
@@ -40,6 +42,7 @@ function App() {
 
     setTokenDataObjects(await Promise.all(tokenDataPromises));
     setHasQueried(true);
+    setLoading(false);
   }
   return (
     <Box w="100vw">
@@ -82,34 +85,39 @@ function App() {
 
         <Heading my={36}>ERC-20 token balances:</Heading>
 
-        {hasQueried ? (
-          <SimpleGrid w={'90vw'} columns={4} spacing={24}>
-            {results.tokenBalances.map((e, i) => {
-              return (
-                <Flex
-                  flexDir={'column'}
-                  color="white"
-                  bg="blue"
-                  w={'20vw'}
-                  key={e.id}
-                >
-                  <Box>
-                    <b>Symbol:</b> ${tokenDataObjects[i].symbol}&nbsp;
-                  </Box>
-                  <Box>
-                    <b>Balance:</b>&nbsp;
-                    {Utils.formatUnits(
-                      e.tokenBalance,
-                      tokenDataObjects[i].decimals
-                    )}
-                  </Box>
-                  <Image src={tokenDataObjects[i].logo} />
-                </Flex>
-              );
-            })}
-          </SimpleGrid>
+        {loading ? (
+          <p>Loading...</p>
         ) : (
-          'Please make a query! This may take a few seconds...'
+
+          hasQueried ? (
+            <SimpleGrid w={'90vw'} columns={4} spacing={24}>
+              {results.tokenBalances.map((e, i) => {
+                return (
+                  <Flex
+                    flexDir={'column'}
+                    color="white"
+                    bg="blue"
+                    w={'20vw'}
+                    key={e.id}
+                  >
+                    <Box>
+                      <b>Symbol:</b> ${tokenDataObjects[i].symbol}&nbsp;
+                    </Box>
+                    <Box>
+                      <b>Balance:</b>&nbsp;
+                      {Utils.formatUnits(
+                        e.tokenBalance,
+                        tokenDataObjects[i].decimals
+                      )}
+                    </Box>
+                    <Image src={tokenDataObjects[i].logo} />
+                  </Flex>
+                );
+              })}
+            </SimpleGrid>
+          ) : (
+            'Please make a query! This may take a few seconds...'
+          )
         )}
       </Flex>
     </Box>
