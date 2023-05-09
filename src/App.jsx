@@ -74,12 +74,12 @@ function App() {
           onChange={(e) => setUserAddress(e.target.value)}
           color="black"
           w="600px"
-          textAlign="center"
+          borderRadius={10}
           p={4}
           bgColor="white"
           fontSize={24}
         />
-        <Button fontSize={20} onClick={getTokenBalance} mt={36} bgColor="blue">
+        <Button fontSize={20} onClick={getTokenBalance} mt={36} bgColor="white">
           Check ERC-20 Token Balances
         </Button>
 
@@ -94,10 +94,12 @@ function App() {
               {results.tokenBalances.map((e, i) => {
                 return (
                   <Flex
-                    flexDir={'column'}
-                    color="white"
-                    bg="blue"
-                    w={'20vw'}
+                    flexDir={'row'}
+                    justifyContent={'space-between'}
+                    alignItems={'center'}
+                    color="black"
+                    bg="gray"
+                    w={'60vw'}
                     key={e.id}
                   >
                     <Box>
@@ -110,7 +112,6 @@ function App() {
                         tokenDataObjects[i].decimals
                       )}
                     </Box>
-                    <Image src={tokenDataObjects[i].logo} />
                   </Flex>
                 );
               })}
