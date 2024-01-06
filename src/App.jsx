@@ -20,7 +20,7 @@ function App() {
 
   async function getTokenBalance() {
     const config = {
-      apiKey: '<-- COPY-PASTE YOUR ALCHEMY API KEY HERE -->',
+      apiKey: 't6l5ShkHmI97nfbVwsW6FBnk0KVSO001',
       network: Network.ETH_MAINNET,
     };
 
